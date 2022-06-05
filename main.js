@@ -16,7 +16,7 @@ const host = '127.0.0.1'
 try {
     
     const apiKey = process.env.APIKEY
-
+    console.log(apiKey)
     const challengesIdsUrl = `https://eun1.api.riotgames.com/lol/challenges/v1/challenges/config?api_key=${apiKey}` 
     const challengesIdsTemp = await fetch(challengesIdsUrl);
     const challengesIds = await challengesIdsTemp.json();
@@ -34,20 +34,25 @@ try {
 
     const [my] = challengesIds.filter(e => e.id == 502003)
 
+    
+    app.get("/", function (req, res) {
+        res.send('bla bla bla')
+    })
+    app.get("/getName", function (req, res) {
+        res.send(JSON.stringify(my.localizedNames.en_US))
+    })
+    
+    app.get("/api/getName", function (req, res) {
+        res.send(JSON.stringify(my.localizedNames.en_US))
+    })
+    
+
 } catch (error) {
     console.log('err')
 }
 
 
 
-
-
-app.get("/", function (req, res) {
-    res.send('bla bla bla')
-})
-app.get("/getName", function (req, res) {
-    res.send(JSON.stringify(my.localizedNames.en_US))
-})
 
 
 
