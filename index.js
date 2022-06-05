@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-const product = require("./api/product");
+//const product = require("./api/product");
 
 
 app.use(express.json({ extended: false }));
@@ -17,19 +17,34 @@ try {
     // const urlSummoner = ``
     // const summonerTemp = await fetch(urlSummoner);
     // const summoner = await summonerTemp.json();
-        const summoner = axios.get(`https://eun1.api.riotgames.com/lol/summoner/v4/summoners/by-name/KenrouHolo?api_key=${apiKey}`)
+    try {
+        const summoner = await axios.get(`https://eun1.api.riotgames.com/lol/summoner/v4/summoners/by-name/KenrouHolo?api_key=${apiKey}`)
         console.log(summoner)
         return summoner
+    } catch (error) {
+        return 'err'
+    }
+
     }
     async function getChallengesIds(){
-        const challengesIds = axios.get(`https://eun1.api.riotgames.com/lol/challenges/v1/challenges/config?api_key=${apiKey}`)
-        console.log(challengesIds)
-        return challengesIds
+
+        try {
+            const challengesIds = await axios.get(`https://eun1.api.riotgames.com/lol/challenges/v1/challenges/config?api_key=${apiKey}`)
+            console.log(challengesIds)
+            return challengesIds
+        } catch (error) {
+            return 'err'
+        }
     }
     async function getChallenges(summoner){
-        const challengesIds = axios.get(`https://eun1.api.riotgames.com/lol/challenges/v1/player-data/${summoner.puuid}?api_key=${apiKey}`)
-        console.log(challengesIds)
-        return challengesIds
+
+        try {
+            const challengesIds = await axios.get(`https://eun1.api.riotgames.com/lol/challenges/v1/player-data/${summoner.puuid}?api_key=${apiKey}`)
+            console.log(challengesIds)
+            return challengesIds
+        } catch (error) {
+            return 'err'
+        }
     }
     // 
     // console.log(apiKey)
@@ -48,7 +63,7 @@ try {
 
     // const [my] = challengesIds.filter(e => e.id == 502003)
 
-    app.use("/api/product", product);
+    //app.use("/api/product", product);
     app.get("/", function (req, res) {
         res.send('bla bla bla')
     })
