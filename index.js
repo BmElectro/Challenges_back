@@ -52,7 +52,7 @@ try {
     app.get("/", function (req, res) {
         res.send('bla bla bla')
     })
-    app.get("/getname", function (req, res) {
+    app.get("/getname", async function (req, res) {
         const ids = await getChallengesIds()
         const summoner = await getSummoner()
         const challenges = await getChallenges(summoner)
