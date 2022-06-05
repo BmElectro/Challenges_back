@@ -1,5 +1,7 @@
 const express = require("express");
 const app = express();
+const product = require("./api/product");
+
 
 app.use(express.json({ extended: false }));
 const axios = require('axios').default;
@@ -46,7 +48,7 @@ try {
 
     // const [my] = challengesIds.filter(e => e.id == 502003)
 
-    console.log('blabla')
+    app.use("/api/product", product);
     app.get("/", function (req, res) {
         res.send('bla bla bla')
     })
