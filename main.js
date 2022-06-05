@@ -38,6 +38,9 @@ const [my] = challengesIds.filter(e => e.id == 502003)
 console.log(my.localizedNames.en_US);
 
 
+app.get("/", function (req, res) {
+    res.send('bla bla bla')
+})
 app.get("/getName", function (req, res) {
     res.send(JSON.stringify(my.localizedNames.en_US))
 })
