@@ -81,6 +81,7 @@ app.get("/getchallenges", async function (req, res) {
         //console.log(challengeNameString.localizedNames.en_US)
         chall.challengeId = challengeNameString.localizedNames.en_US.name
         chall.challengeText = challengeNameString.localizedNames.en_US.description
+        chall.threshholds = challengeNameString.thresholds
         challengesWithNames.push(chall)
     } 
     challenges.challenges = challengesWithNames
