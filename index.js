@@ -8,7 +8,7 @@ app.use(cors())
 
 app.use(express.json({ extended: false }));
 const axios = require('axios').default;
-
+//const clash = require("./api/clash");
 
 
 
@@ -59,7 +59,7 @@ function convertTime(unix_timestamp){
 
 }
 
-
+//app.use("/clash", clash);
 
 app.get("/", function (req, res) {
     res.send('bla bla bla')
@@ -80,6 +80,7 @@ app.get("/getchallenges", async function (req, res) {
 
         //console.log(challengeNameString.localizedNames.en_US)
         chall.challengeId = challengeNameString.localizedNames.en_US.name
+        chall.challengeText = challengeNameString.localizedNames.en_US.description
         challengesWithNames.push(chall)
     } 
     challenges.challenges = challengesWithNames
@@ -87,12 +88,11 @@ app.get("/getchallenges", async function (req, res) {
     
     res.send(JSON.stringify(challenges))
 })
-
-// app.get("/api/getName", function (req, res) {
-//     res.send(JSON.stringify(my.localizedNames.en_US))
-// })
-
-
+// "https://eun1.api.riotgames.com/lol/summoner/v4/summoners/by-name/{summonerr_name}?api_key={APiKeys}" summ PUID
+// "https://eun1.api.riotgames.com/lol/clash/v1/players/by-summoner/{summoner_Id}?api_key={APiKeys}"   get team
+// "https://eun1.api.riotgames.com/lol/clash/v1/teams/{team_Id}?api_key={APiKeys}" get the rest of the team 
+//  https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/{puuid}/ids?start=0&count=100&api_key={apikey}    get match list
+// https://europe.api.riotgames.com/lol/match/v5/matches/{match_ID}?api_key={apikey}   get single match info
 
 
 
