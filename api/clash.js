@@ -19,7 +19,7 @@ async function getSummonerPuuidBySummonerId(summonerId){
   try {
       const summonerPuuid = await axios.get(`https://eun1.api.riotgames.com/lol/summoner/v4/summoners/${summonerId}?api_key=${apiKey}`)
       
-      return summonerPuuid.data.puuid
+      return {puuid:summonerPuuid.data.puuid, name:summonerPuuid.data.name}
   } catch (error) {
       return error
   }
@@ -116,9 +116,10 @@ router.get("/", async (req, res) => {
       const clashTeamMembers = await getClashTeamMembers(clashTeam.teamId)
       let clashTeamMembersSummonerIds = clashTeamMembers.players.map(e => e = e.summonerId)
       
-      const allPuuidsPromises = clashTeamMembersSummonerIds.map((e) => getSummonerPuuidBySummonerId(e))
-      const allPuuids = await Promise.all(allPuuidsPromises)
-      const allMatchListPromises = allPuuids.map((e) => getMatchList(e))
+      const allPuuidsAndNamesPromises = clashTeamMembersSummonerIds.map((e) => getSummonerPuuidBySummonerId(e))
+      const allPuuidsAndNames = await Promise.all(allPuuidsAndNamesPromises)
+      const allMatchListPromises = allPuuidsAndNames.map((e) => getMatchList(e.puuid))
+      const allNames = allPuuidsAndNames.map(e=> e = e.name)
       const allMatchList = await Promise.all(allMatchListPromises)
 
       let allMatchesArray = []
@@ -138,7 +139,8 @@ router.get("/", async (req, res) => {
       }
       const sharedMatchIds = Object.keys(repeatedMatchIds).filter(e => repeatedMatchIds[e] > allPuuids.length-1)
       const details = await getMatchesDetails(sharedMatchIds)
-      res.send(JSON.stringify(details))
+      console.log(JSON.stringify({details:details, allNames:allNames}))
+      res.send(JSON.stringify({details:details, allNames:allNames}))
 
 
   } catch (error) {
