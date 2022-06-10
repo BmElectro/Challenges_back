@@ -80,20 +80,24 @@ async function getBatchMatchDetails(batch){
 }
 async function getMatchesDetails(sharedMatchIds){
   try {
-    console.log('allmatcheslength' , sharedMatchIds.length)
-    let batchesArray = []
-    for(let i = 0; i < sharedMatchIds.length; i+=10) {
-      batchesArray.push(sharedMatchIds.slice(i, i+10))
-    }
-    let allmatchDetails = []
-    for (let batch of batchesArray){
-        const result = await getBatchMatchDetails(batch)
-        allmatchDetails = [...allmatchDetails, ...result]
+    // This part is working, it is commented out because vercel does not allow long function exectutions. 
 
-    }
 
-    console.log(allmatchDetails.length)
-    return allmatchDetails
+    // let batchesArray = []
+    // for(let i = 0; i < sharedMatchIds.length; i+=10) {
+    //   batchesArray.push(sharedMatchIds.slice(i, i+10))
+    // }
+    // let allmatchDetails = []
+    // for (let batch of batchesArray){
+    //     const result = await getBatchMatchDetails(batch)
+    //     allmatchDetails = [...allmatchDetails, ...result]
+
+    // }
+
+    // console.log(allmatchDetails.length)
+    // return allmatchDetails
+    const result = await getBatchMatchDetails(sharedMatchIds.slice(0, 10))
+    return result
   } catch (error) {
       return error
   }
