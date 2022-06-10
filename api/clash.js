@@ -119,7 +119,10 @@ router.get("/", async (req, res) => {
       const allPuuidsAndNamesPromises = clashTeamMembersSummonerIds.map((e) => getSummonerPuuidBySummonerId(e))
       const allPuuidsAndNames = await Promise.all(allPuuidsAndNamesPromises)
       const allMatchListPromises = allPuuidsAndNames.map((e) => getMatchList(e.puuid))
-      const allNames = allPuuidsAndNames.map(e=> e = e.name)
+      console.log('no error yet')
+      let allNames = allPuuidsAndNames.map(e=> e = e.name)
+      console.log(allNames)
+
       const allMatchList = await Promise.all(allMatchListPromises)
 
       let allMatchesArray = []
