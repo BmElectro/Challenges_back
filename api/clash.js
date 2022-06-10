@@ -61,16 +61,15 @@ async function getSingleMatchDetails(matchId){
       return error
   }
 }
-async function getBatchMatchDetails(batch){
+async function getBatchMatchDetails(batch, delay){
   return new Promise((resolve, reject)=>{
     try {
       setTimeout(async ()=>{
-        console.log('waiting 5 seconds')
         const batchMatchDetailsPromises = batch.map((e) => getSingleMatchDetails(e))
         const batchMatchDetails = await Promise.all(batchMatchDetailsPromises)
     
         resolve(batchMatchDetails) 
-      }, 5000)
+      }, delay)
 
     } catch (error) {
       reject(error) 
@@ -96,7 +95,7 @@ async function getMatchesDetails(sharedMatchIds){
 
     // console.log(allmatchDetails.length)
     // return allmatchDetails
-    const result = await getBatchMatchDetails(sharedMatchIds.slice(0, 10))
+    const result = await getBatchMatchDetails(sharedMatchIds.slice(0, 10), 1)
     return result
   } catch (error) {
       return error
