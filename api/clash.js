@@ -55,7 +55,7 @@ async function getMatchList(puuid){
 async function getSingleMatchDetails(matchId){
   try {
     const matchDetails = await axios.get(`https://europe.api.riotgames.com/lol/match/v5/matches/${matchId}?api_key=${apiKey}`)
-    await jsonBlob.update(matchId, matchDetails.data.info)
+    //await jsonBlob.update(matchId, matchDetails.data.info)
     return matchDetails.data.info
   } catch (error) {
       return error
