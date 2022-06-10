@@ -1,0 +1,2 @@
+const premadeChallenges = ["Summoners on the Rift","Variety's Overrated","Get Over Here","It's a Trap!","I'm Helping","Hold That Pose","5 Under 5'","All Hands on Deck","FOR DEMACIA","Ice, Ice, Baby","Everybody was Wuju Fighting","Elemental, My Dear Watson","Strength Above All","Calculated","Spooky Scary Skeletons","The Sun Disc Never Sets","Peak Performance","(Inhuman Screeching Sounds)","Chemtech Comrades"]
+module.exports =  premadeChallenges

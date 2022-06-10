@@ -1,7 +1,8 @@
 const express = require("express");
 const app = express();
-const cors = require('cors')
-
+const cors = require('cors');
+const clash = require("./api/clash");
+const premadeChallenges = require('./premadeChallenges');
 require('dotenv').config()
 
 app.use(cors())
@@ -10,10 +11,14 @@ app.use(express.json({ extended: false }));
 const axios = require('axios').default;
 //const clash = require("./api/clash");
 
-
+let ids = {}
 
 const port = 8080
-const apiKey = process.env.APIKEY
+const apiKey = process.env.APIKEY;
+(async()=>{
+    ids = await getChallengesIds()
+})();
+
 
 async function getSummoner(summonerName){
     try {
@@ -59,7 +64,38 @@ function convertTime(unix_timestamp){
 
 }
 
-//app.use("/clash", clash);
+async function compileNeededChallenges(teamMembersArray){
+    let allTeamChallenges = []
+
+    for(let member of teamMembersArray){
+        try {
+            let thisMemeberChallenges = []
+            for (let chall of challenges.challenges){
+                const [challengeNameString] = ids.filter(e => e.id == chall.challengeId)
+        
+                //console.log(challengeNameString.localizedNames.en_US)
+                
+                chall.challengeId = challengeNameString.localizedNames.en_US.name
+                if(premadeChallenges.includes(chall.challengeId)){
+                    chall.challengeText = challengeNameString.localizedNames.en_US.description
+                    chall.thresholds = challengeNameString.thresholds
+                }
+               
+                
+                thisMemeberChallenges.push(chall)
+            }
+            allTeamChallenges.push({member:member, challenges: thisMemeberChallenges})
+        } catch (error) {
+            return error
+        }
+        
+
+       
+    }
+    return allTeamChallenges
+}
+
+app.use("/clash", clash);
 
 app.get("/", function (req, res) {
     res.send('bla bla bla')
@@ -68,14 +104,14 @@ app.get("/getchallenges", async function (req, res) {
 
     const summonerName = req.query.sumname
 
-    const ids = await getChallengesIds()
+    
     const summoner = await getSummoner(summonerName)
     const challenges = await getChallenges(summoner)
     
 
         ///el => el.challengeId = ids[el.challengeId].localizedNames.en_US
     let challengesWithNames = []
-    for (chall of challenges.challenges){
+    for (let chall of challenges.challenges){
         const [challengeNameString] = ids.filter(e => e.id == chall.challengeId)
 
         //console.log(challengeNameString.localizedNames.en_US)
@@ -88,6 +124,18 @@ app.get("/getchallenges", async function (req, res) {
     
     
     res.send(JSON.stringify(challenges))
+})
+
+app.get('/getTeamChallenges', async function (req, res){
+    const teamnames = req.query.teamnames
+    const teamMembersArray = teamnames.split(',')
+    if(!teamMembersArray.length == 0){
+        const allTeamChallenges = await compileNeededChallenges(teamMembersArray)
+        res.send(JSON.stringify(allTeamChallenges))
+    }else{
+        res.send('NOT FOUND')
+    }
+
 })
 // "https://eun1.api.riotgames.com/lol/summoner/v4/summoners/by-name/{summonerr_name}?api_key={APiKeys}" summ PUID
 // "https://eun1.api.riotgames.com/lol/clash/v1/players/by-summoner/{summoner_Id}?api_key={APiKeys}"   get team
