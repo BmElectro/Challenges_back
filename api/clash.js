@@ -136,7 +136,7 @@ router.get("/", async (req, res) => {
           repeatedMatchIds[mathchId] = 0
         }
       }
-      const sharedMatchIds = Object.keys(repeatedMatchIds).filter(e => repeatedMatchIds[e] > 0)
+      const sharedMatchIds = Object.keys(repeatedMatchIds).filter(e => repeatedMatchIds[e] > allPuuids.length-1)
       const details = await getMatchesDetails(sharedMatchIds)
       res.send(JSON.stringify(details))
 
