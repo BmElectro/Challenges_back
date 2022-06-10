@@ -140,7 +140,7 @@ router.get("/", async (req, res) => {
           repeatedMatchIds[mathchId] = 0
         }
       }
-      const sharedMatchIds = Object.keys(repeatedMatchIds).filter(e => repeatedMatchIds[e] > allPuuidsAndNames.length-1)
+      const sharedMatchIds = Object.keys(repeatedMatchIds).filter(e => repeatedMatchIds[e] >= allPuuidsAndNames.length-1)
       const details = await getMatchesDetails(sharedMatchIds)
       console.log(JSON.stringify({details:details, allNames:allNames}))
       res.send(JSON.stringify({details:details, allNames:allNames}))
