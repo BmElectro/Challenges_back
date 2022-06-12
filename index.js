@@ -66,9 +66,8 @@ function convertTime(unix_timestamp){
 
 async function compileNeededChallenges(teamMembersArray){
     let allTeamChallenges = []
-
     for(let member of teamMembersArray){
-        console.log(teamMembersArray)
+        //console.log(teamMembersArray)
         try {
             const challenges = await getSoloChallenges(member)
             const neededChallenges = challenges.challenges.filter(e => premadeChallenges.includes(e.challengeId))
@@ -77,12 +76,35 @@ async function compileNeededChallenges(teamMembersArray){
             console.log(error)
             return error
         }
-        
-
-       
     }
-    return allTeamChallenges
+    const [sameChallenges, notSameChallenges] = allTeamChallenges.reduce(compareChallenges,array[0])
+    let result = {
+        sameChallenges: sameChallenges,
+        notSameChallenges: notSameChallenges,
+        allTeamChallenges: allTeamChallenges
+    }
+    return result
 }
+
+
+function compareChallenges(previousValue, currentValue, bigIndex, ogArray){
+    bigIndex = bigIndex > 0 ? bigIndex-1 : 0
+    let sameChallenges = []
+    let notSameChallenges = []
+    for(let [index, chall] of ogArray[bigIndex].challenges.entries()){
+
+        if(chall.challengeId == currentValue.challenges[index].challengeId &&
+            chall.level ==  currentValue.challenges[index].level &&
+            chall.value == currentValue.challenges[index].value)
+        {
+            sameChallenges.push(chall)
+        }else{
+            notSameChallenges.push(chall)
+        }
+    }
+    return [sameChallenges, notSameChallenges]
+}
+
 
 async function getSoloChallenges(summonerName){
     const summoner = await getSummoner(summonerName)
