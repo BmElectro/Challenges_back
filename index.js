@@ -92,6 +92,7 @@ async function getSoloChallenges(summonerName){
         ///el => el.challengeId = ids[el.challengeId].localizedNames.en_US
     let challengesWithNames = []
     for (let chall of challenges.challenges){
+        console.log(ids)
         const [challengeNameString] = ids.filter(e => e.id == chall.challengeId)
 
         //console.log(challengeNameString.localizedNames.en_US)
