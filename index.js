@@ -23,7 +23,7 @@ const apiKey = process.env.APIKEY;
 async function getSummoner(summonerName){
     try {
         const summoner = await axios.get(`https://eun1.api.riotgames.com/lol/summoner/v4/summoners/by-name/${summonerName}?api_key=${apiKey}`)
-        console.log(summoner)
+        //console.log(summoner)
         return summoner.data
     } catch (error) {
         return error
@@ -68,24 +68,13 @@ async function compileNeededChallenges(teamMembersArray){
     let allTeamChallenges = []
 
     for(let member of teamMembersArray){
+        console.log(teamMembersArray)
         try {
-            let thisMemeberChallenges = []
-            for (let chall of challenges.challenges){
-                const [challengeNameString] = ids.filter(e => e.id == chall.challengeId)
-        
-                //console.log(challengeNameString.localizedNames.en_US)
-                
-                chall.challengeId = challengeNameString.localizedNames.en_US.name
-                if(premadeChallenges.includes(chall.challengeId)){
-                    chall.challengeText = challengeNameString.localizedNames.en_US.description
-                    chall.thresholds = challengeNameString.thresholds
-                }
-               
-                
-                thisMemeberChallenges.push(chall)
-            }
-            allTeamChallenges.push({member:member, challenges: thisMemeberChallenges})
+            const challenges = await getSoloChallenges(member)
+            const neededChallenges = challenges.challenges.filter(e => premadeChallenges.includes(e.challengeId))
+            allTeamChallenges.push({member:member, challenges: neededChallenges})
         } catch (error) {
+            console.log(error)
             return error
         }
         
@@ -95,16 +84,7 @@ async function compileNeededChallenges(teamMembersArray){
     return allTeamChallenges
 }
 
-app.use("/clash", clash);
-
-app.get("/", function (req, res) {
-    res.send('bla bla bla')
-})
-app.get("/getchallenges", async function (req, res) {
-
-    const summonerName = req.query.sumname
-
-    
+async function getSoloChallenges(summonerName){
     const summoner = await getSummoner(summonerName)
     const challenges = await getChallenges(summoner)
     
@@ -121,6 +101,22 @@ app.get("/getchallenges", async function (req, res) {
         challengesWithNames.push(chall)
     } 
     challenges.challenges = challengesWithNames
+
+    return challenges
+}
+
+
+app.use("/clash", clash);
+
+app.get("/", function (req, res) {
+    res.send('bla bla bla')
+})
+app.get("/getchallenges", async function (req, res) {
+
+    const summonerName = req.query.sumname
+    const challenges = await getSoloChallenges(summonerName)
+    
+    
     
     
     res.send(JSON.stringify(challenges))

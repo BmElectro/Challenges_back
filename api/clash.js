@@ -77,6 +77,12 @@ async function getBatchMatchDetails(batch, delay){
   })
     
 }
+function findMostPlayedChampionForEachPlayer(allPuuidsAndNames, details){
+  let mostPlayedChamps = {}
+  for (let game of details){
+    
+  }
+}
 async function getMatchesDetails(sharedMatchIds){
   try {
     // This part is working, it is commented out because vercel does not allow long function exectutions. 
@@ -142,6 +148,10 @@ router.get("/", async (req, res) => {
       }
       const sharedMatchIds = Object.keys(repeatedMatchIds).filter(e => repeatedMatchIds[e] >= allPuuidsAndNames.length-1)
       const details = await getMatchesDetails(sharedMatchIds)
+      // let championFrequency = new Map()
+      // for (let game of details){
+       
+      // }
       console.log(JSON.stringify({details:details, allNames:allNames}))
       res.send(JSON.stringify({details:details, allNames:allNames}))
 
